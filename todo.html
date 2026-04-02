@@ -8,54 +8,168 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f0f13;
-      --surface: #1a1a24;
-      --border: #2a2a3a;
-      --accent: #7c6af7;
-      --accent-dim: #4a3fa0;
-      --text: #e8e8f0;
-      --text-muted: #6b6b82;
-      --danger: #f75a5a;
-      --success: #5af7a0;
-      --radius: 12px;
+      --bg:          #0f0f13;
+      --sidebar-bg:  #111118;
+      --surface:     #1a1a24;
+      --border:      #2a2a3a;
+      --accent:      #7c6af7;
+      --text:        #e8e8f0;
+      --text-muted:  #6b6b82;
+      --danger:      #f75a5a;
+      --success:     #5af7a0;
+      --radius:      12px;
+      --cat-recruit:  #f7a25a;
+      --cat-inrudder: #7c6af7;
+      --cat-private:  #5af7a0;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
-      justify-content: center;
-      padding: 40px 16px 80px;
+      overflow: hidden;
     }
 
-    .app {
-      width: 100%;
-      max-width: 560px;
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 170px;
+      flex-shrink: 0;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
-    header {
-      margin-bottom: 32px;
-    }
-
-    h1 {
-      font-size: 2rem;
+    .sidebar-logo {
+      padding: 24px 18px 16px;
+      font-size: 1.15rem;
       font-weight: 700;
-      letter-spacing: -0.5px;
-      color: var(--text);
+      letter-spacing: -0.3px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
     }
 
-    .subtitle {
+    .sidebar-dates {
+      overflow-y: auto;
+      flex: 1;
+      padding: 6px 0;
+    }
+
+    .sidebar-dates::-webkit-scrollbar { width: 3px; }
+    .sidebar-dates::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .date-item {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      padding: 9px 14px;
+      margin: 2px 6px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: background 0.12s;
+      position: relative;
+    }
+
+    .date-item:hover  { background: var(--surface); }
+    .date-item.active { background: var(--accent); }
+
+    .date-item .d-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .today-badge {
+      font-size: 0.58rem;
+      background: rgba(255,255,255,0.18);
+      padding: 1px 5px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .date-item.active .today-badge { background: rgba(255,255,255,0.25); }
+
+    .date-item .d-week {
+      font-size: 0.68rem;
       color: var(--text-muted);
-      font-size: 0.875rem;
-      margin-top: 4px;
     }
 
+    .date-item.active .d-week,
+    .date-item.active .d-count { color: rgba(255,255,255,0.65); }
+
+    .date-item .d-count {
+      font-size: 0.67rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .has-todo-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      position: absolute;
+      right: 10px; top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .date-item.active .has-todo-dot { background: rgba(255,255,255,0.5); }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 36px 44px 24px;
+    }
+
+    .main-header {
+      margin-bottom: 22px;
+      flex-shrink: 0;
+    }
+
+    .main-date-label {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+    }
+
+    .main-meta {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-wrap {
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      max-width: 200px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #a78cf7);
+      border-radius: 2px;
+      transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ── Input ── */
     .input-row {
       display: flex;
       gap: 8px;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
+      flex-shrink: 0;
     }
 
     .input-row input {
@@ -65,13 +179,28 @@
       border-radius: var(--radius);
       color: var(--text);
       font-size: 0.95rem;
-      padding: 12px 16px;
+      padding: 11px 15px;
       outline: none;
       transition: border-color 0.15s;
+      min-width: 0;
     }
 
     .input-row input::placeholder { color: var(--text-muted); }
     .input-row input:focus { border-color: var(--accent); }
+
+    .cat-select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 0.8rem;
+      padding: 0 10px;
+      outline: none;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .cat-select:focus { border-color: var(--accent); }
 
     .btn-add {
       background: var(--accent);
@@ -79,107 +208,202 @@
       border-radius: var(--radius);
       color: #fff;
       cursor: pointer;
-      font-size: 1.25rem;
-      padding: 0 18px;
+      font-size: 1.3rem;
+      width: 44px;
+      flex-shrink: 0;
       transition: background 0.15s, transform 0.1s;
     }
 
-    .btn-add:hover { background: #9182ff; }
-    .btn-add:active { transform: scale(0.96); }
+    .btn-add:hover  { background: #9182ff; }
+    .btn-add:active { transform: scale(0.94); }
 
-    .filters {
+    /* ── Filters ── */
+    .filter-bar {
       display: flex;
-      gap: 6px;
-      margin-bottom: 16px;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      flex-shrink: 0;
     }
 
-    .filter-btn {
+    .f-btn {
       background: none;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 7px;
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 0.8rem;
-      padding: 5px 14px;
-      transition: all 0.15s;
+      font-size: 0.73rem;
+      padding: 4px 11px;
+      transition: all 0.13s;
     }
 
-    .filter-btn:hover { border-color: var(--accent); color: var(--text); }
-    .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .f-btn:hover        { border-color: var(--accent); color: var(--text); }
+    .f-btn.active       { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-    .stats {
-      font-size: 0.8rem;
+    /* ── Stats row ── */
+    .stats-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .stats-txt {
+      font-size: 0.78rem;
       color: var(--text-muted);
-      margin-left: auto;
-      align-self: center;
     }
 
-    .list {
+    .clear-btn {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.74rem;
+      text-decoration: underline;
+      transition: color 0.13s;
+    }
+
+    .clear-btn:hover { color: var(--danger); }
+
+    /* ── Task area ── */
+    .task-area {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .task-area::-webkit-scrollbar { width: 4px; }
+    .task-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .section-lbl {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin: 14px 0 8px 2px;
+    }
+
+    .section-lbl:first-child { margin-top: 0; }
+
+    .task-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
+      margin-bottom: 4px;
     }
 
+    /* ── Item ── */
     .item {
+      display: flex;
       align-items: center;
+      gap: 11px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      display: flex;
-      gap: 12px;
-      padding: 14px 16px;
-      transition: border-color 0.15s, opacity 0.15s;
-      animation: slideIn 0.18s ease;
+      padding: 13px 15px;
+      transition: border-color 0.13s;
+      animation: slideIn 0.17s ease;
+      position: relative;
+      overflow: hidden;
     }
 
     @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-6px); }
+      from { opacity: 0; transform: translateY(-5px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
     .item:hover { border-color: #3a3a50; }
-    .item.done { opacity: 0.5; }
 
-    .check {
-      appearance: none;
-      background: none;
-      border: 2px solid var(--border);
-      border-radius: 50%;
-      cursor: pointer;
-      flex-shrink: 0;
-      height: 20px;
-      outline: none;
-      transition: all 0.15s;
-      width: 20px;
-      position: relative;
+    .item.done {
+      opacity: 0.42;
     }
 
-    .check:hover { border-color: var(--accent); }
+    /* Completion flash */
+    @keyframes completePulse {
+      0%   { background: var(--surface); }
+      25%  { background: rgba(90,247,160,0.10); border-color: rgba(90,247,160,0.35); }
+      100% { background: var(--surface); }
+    }
 
-    .check:checked {
+    .item.completing {
+      animation: completePulse 0.55s ease forwards;
+    }
+
+    /* Checkbox */
+    .chk {
+      appearance: none;
+      width: 19px; height: 19px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      cursor: pointer;
+      outline: none;
+      position: relative;
+      transition: border-color 0.13s, background 0.13s;
+    }
+
+    .chk:hover { border-color: var(--accent); }
+
+    .chk:checked {
       background: var(--success);
       border-color: var(--success);
+      animation: checkPop 0.32s cubic-bezier(0.34,1.56,0.64,1);
     }
 
-    .check:checked::after {
+    @keyframes checkPop {
+      0%  { transform: scale(0.75); }
+      60% { transform: scale(1.22); }
+      100%{ transform: scale(1); }
+    }
+
+    .chk:checked::after {
       content: '';
       position: absolute;
-      top: 3px; left: 5px;
-      width: 6px; height: 10px;
+      top: 2px; left: 4.5px;
+      width: 6px; height: 9px;
       border: 2px solid #0f0f13;
       border-top: none; border-left: none;
       transform: rotate(45deg);
     }
 
-    .item-text {
-      flex: 1;
-      font-size: 0.95rem;
-      line-height: 1.4;
-      word-break: break-word;
-      transition: text-decoration 0.15s;
+    /* Category tag */
+    .cat-tag {
+      font-size: 0.62rem;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 20px;
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
     }
 
-    .done .item-text { text-decoration: line-through; color: var(--text-muted); }
+    .cat-tag.recruit  { background: rgba(247,162,90,0.13); color: var(--cat-recruit); }
+    .cat-tag.inrudder { background: rgba(124,106,247,0.15); color: var(--cat-inrudder); }
+    .cat-tag.private  { background: rgba(90,247,160,0.12); color: var(--cat-private); }
+
+    /* Carryover date badge */
+    .carry-badge {
+      font-size: 0.62rem;
+      padding: 2px 7px;
+      border-radius: 20px;
+      flex-shrink: 0;
+      white-space: nowrap;
+      color: var(--danger);
+      background: rgba(247,90,90,0.10);
+    }
+
+    .item-text {
+      flex: 1;
+      font-size: 0.93rem;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .done .item-text {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
 
     .btn-del {
       background: none;
@@ -187,168 +411,476 @@
       border-radius: 6px;
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
+      font-size: 0.85rem;
+      padding: 4px 5px;
       opacity: 0;
-      padding: 4px 6px;
-      transition: all 0.15s;
+      transition: opacity 0.13s, background 0.13s, color 0.13s;
+      flex-shrink: 0;
     }
 
     .item:hover .btn-del { opacity: 1; }
-    .btn-del:hover { background: #f75a5a22; color: var(--danger); }
+    .btn-del:hover { background: rgba(247,90,90,0.12); color: var(--danger); }
 
-    .empty {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      padding: 32px 0;
+    .empty-msg {
       text-align: center;
-    }
-
-    .clear-btn {
-      background: none;
-      border: none;
       color: var(--text-muted);
-      cursor: pointer;
-      font-size: 0.8rem;
-      margin-top: 20px;
-      padding: 4px 0;
-      text-decoration: underline;
-      transition: color 0.15s;
+      font-size: 0.88rem;
+      padding: 36px 0;
     }
 
-    .clear-btn:hover { color: var(--danger); }
+    /* Particle canvas */
+    #p-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
   </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <h1>TODO</h1>
-    <p class="subtitle" id="date"></p>
-  </header>
 
+<canvas id="p-canvas"></canvas>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">TODO</div>
+  <div class="sidebar-dates" id="sidebarDates"></div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <!-- Header -->
+  <div class="main-header">
+    <div class="main-date-label" id="mainDateLabel"></div>
+    <div class="main-meta">
+      <span id="mainMeta"></span>
+      <div class="progress-wrap">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input -->
   <div class="input-row">
-    <input id="input" placeholder="新しいタスクを入力..." maxlength="200" autocomplete="off">
-    <button class="btn-add" id="addBtn" title="追加">+</button>
+    <input type="text" id="taskInput" placeholder="新しいタスクを入力..." maxlength="200" autocomplete="off">
+    <select class="cat-select" id="catSelect">
+      <option value="recruit">仕事_Recruit</option>
+      <option value="inrudder">仕事_InRudder</option>
+      <option value="private">プライベート</option>
+    </select>
+    <button class="btn-add" id="addBtn" title="追加 (Enter)">+</button>
   </div>
 
-  <div class="filters">
-    <button class="filter-btn active" data-filter="all">すべて</button>
-    <button class="filter-btn" data-filter="active">未完了</button>
-    <button class="filter-btn" data-filter="done">完了</button>
-    <span class="stats" id="stats"></span>
+  <!-- Filters -->
+  <div class="filter-bar">
+    <button class="f-btn active" data-filter="all">すべて</button>
+    <button class="f-btn" data-filter="active">未完了</button>
+    <button class="f-btn" data-filter="done">完了</button>
+    <button class="f-btn" data-filter="recruit">仕事_Recruit</button>
+    <button class="f-btn" data-filter="inrudder">仕事_InRudder</button>
+    <button class="f-btn" data-filter="private">プライベート</button>
   </div>
 
-  <div class="list" id="list"></div>
+  <!-- Stats -->
+  <div class="stats-row">
+    <span class="stats-txt" id="statsTxt"></span>
+    <button class="clear-btn" id="clearDoneBtn" style="display:none">完了済みを削除</button>
+  </div>
 
-  <button class="clear-btn" id="clearDone" style="display:none">完了済みを削除</button>
-</div>
+  <!-- Tasks -->
+  <div class="task-area" id="taskArea"></div>
+</main>
 
 <script>
-  const KEY = 'todos_v1';
-  let filter = 'all';
-  let todos = JSON.parse(localStorage.getItem(KEY) || '[]');
+// ─── Constants ───
+const STORAGE_KEY = 'todos_v3';
+const WEEKDAYS = ['日','月','火','水','木','金','土'];
+const CAT = {
+  recruit:  '仕事_Recruit',
+  inrudder: '仕事_InRudder',
+  private:  'プライベート',
+};
 
-  const input   = document.getElementById('input');
-  const addBtn  = document.getElementById('addBtn');
-  const list    = document.getElementById('list');
-  const stats   = document.getElementById('stats');
-  const clearDoneBtn = document.getElementById('clearDone');
+// ─── State ───
+let todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+let selectedDate = todayStr();
+let activeFilter = 'all';
 
-  // Date
-  document.getElementById('date').textContent =
-    new Date().toLocaleDateString('ja-JP', { year:'numeric', month:'long', day:'numeric', weekday:'short' });
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
 
-  function save() { localStorage.setItem(KEY, JSON.stringify(todos)); }
+function dateToStr(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
 
-  function addTodo() {
-    const text = input.value.trim();
-    if (!text) return;
-    todos.unshift({ id: Date.now(), text, done: false });
-    input.value = '';
-    save();
-    render();
-  }
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+}
 
-  function toggleTodo(id) {
-    const t = todos.find(t => t.id === id);
-    if (t) t.done = !t.done;
-    save();
-    render();
-  }
+// ─── Sidebar ───
+function buildSidebar(scrollToSelected = false) {
+  const container = document.getElementById('sidebarDates');
+  container.innerHTML = '';
 
-  function deleteTodo(id) {
-    todos = todos.filter(t => t.id !== id);
-    save();
-    render();
-  }
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const todayS = todayStr();
 
-  function clearDone() {
-    todos = todos.filter(t => !t.done);
-    save();
-    render();
-  }
+  let selectedEl = null;
 
-  function render() {
-    const visible = todos.filter(t =>
-      filter === 'all'    ? true :
-      filter === 'active' ? !t.done :
-                             t.done
-    );
+  for (let offset = -60; offset <= 60; offset++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + offset);
+    const ds = dateToStr(d);
+    const isToday    = ds === todayS;
+    const isSelected = ds === selectedDate;
+    const ownTodos   = todos.filter(t => t.date === ds);
+    const doneCount  = ownTodos.filter(t => t.done).length;
 
-    const active = todos.filter(t => !t.done).length;
-    const done   = todos.filter(t =>  t.done).length;
-    stats.textContent = `${active} 件残り`;
-    clearDoneBtn.style.display = done > 0 ? 'block' : 'none';
+    const el = document.createElement('div');
+    el.className = 'date-item' + (isToday ? ' today' : '') + (isSelected ? ' active' : '');
+    el.dataset.date = ds;
 
-    if (visible.length === 0) {
-      list.innerHTML = `<div class="empty">${
-        filter === 'done'   ? '完了済みのタスクはありません' :
-        filter === 'active' ? 'すべて完了しました!' :
-                              'タスクを追加してみましょう'
-      }</div>`;
-      return;
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'd-label';
+    labelDiv.textContent = `${d.getMonth()+1}/${d.getDate()}`;
+
+    if (isToday) {
+      const badge = document.createElement('span');
+      badge.className = 'today-badge';
+      badge.textContent = '今日';
+      labelDiv.appendChild(badge);
     }
 
-    list.innerHTML = '';
-    visible.forEach(t => {
-      const item = document.createElement('div');
-      item.className = 'item' + (t.done ? ' done' : '');
+    const weekDiv = document.createElement('div');
+    weekDiv.className = 'd-week';
+    weekDiv.textContent = `（${WEEKDAYS[d.getDay()]}）`;
 
-      const chk = document.createElement('input');
-      chk.type = 'checkbox';
-      chk.className = 'check';
-      chk.checked = t.done;
-      chk.addEventListener('change', () => toggleTodo(t.id));
+    const countDiv = document.createElement('div');
+    countDiv.className = 'd-count';
+    if (ownTodos.length > 0) {
+      countDiv.textContent = `${doneCount}/${ownTodos.length} 完了`;
+    }
 
-      const span = document.createElement('span');
-      span.className = 'item-text';
-      span.textContent = t.text;
+    el.append(labelDiv, weekDiv, countDiv);
 
-      const del = document.createElement('button');
-      del.className = 'btn-del';
-      del.textContent = '✕';
-      del.title = '削除';
-      del.addEventListener('click', () => deleteTodo(t.id));
+    if (ownTodos.length > 0) {
+      const dot = document.createElement('div');
+      dot.className = 'has-todo-dot';
+      el.appendChild(dot);
+    }
 
-      item.append(chk, span, del);
-      list.appendChild(item);
+    el.addEventListener('click', () => {
+      selectedDate = ds;
+      buildSidebar(false);
+      renderMain();
+    });
+
+    container.appendChild(el);
+    if (isSelected) selectedEl = el;
+  }
+
+  if (scrollToSelected && selectedEl) {
+    requestAnimationFrame(() => {
+      selectedEl.scrollIntoView({ block: 'center' });
+    });
+  }
+}
+
+// ─── Main render ───
+function renderMain() {
+  const d = new Date(selectedDate + 'T00:00:00');
+  const todayS = todayStr();
+  const isToday  = selectedDate === todayS;
+  const isFuture = selectedDate > todayS;
+
+  // Header
+  document.getElementById('mainDateLabel').textContent =
+    `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${WEEKDAYS[d.getDay()]}）`;
+  document.getElementById('mainMeta').textContent =
+    isToday ? '今日のタスク' : isFuture ? '予定' : '過去のタスク';
+
+  // Own todos
+  const ownTodos  = todos.filter(t => t.date === selectedDate);
+  const doneCount = ownTodos.filter(t => t.done).length;
+
+  // Progress
+  const pct = ownTodos.length > 0 ? Math.round(doneCount / ownTodos.length * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  // Stats
+  document.getElementById('statsTxt').textContent =
+    ownTodos.length > 0 ? `${doneCount} / ${ownTodos.length} 件完了` : '';
+  document.getElementById('clearDoneBtn').style.display =
+    doneCount > 0 ? 'inline' : 'none';
+
+  // Carryover: incomplete tasks from before selectedDate (only shown for today/future)
+  let carryovers = [];
+  if (selectedDate >= todayS) {
+    carryovers = todos.filter(t => t.date < selectedDate && !t.done);
+  }
+
+  // Apply filter
+  const applyFilter = (list) => {
+    switch (activeFilter) {
+      case 'active':   return list.filter(t => !t.done);
+      case 'done':     return list.filter(t =>  t.done);
+      case 'recruit':
+      case 'inrudder':
+      case 'private':  return list.filter(t => t.category === activeFilter);
+      default:         return list;
+    }
+  };
+
+  const visibleOwn   = applyFilter(ownTodos);
+  // Carryovers are always incomplete — skip when filter is 'done'
+  const visibleCarry = activeFilter === 'done'
+    ? []
+    : applyFilter(carryovers);
+
+  // Render
+  const area = document.getElementById('taskArea');
+  area.innerHTML = '';
+
+  const hasCarry = visibleCarry.length > 0;
+  const hasOwn   = visibleOwn.length > 0;
+
+  if (!hasCarry && !hasOwn) {
+    area.innerHTML = `<div class="empty-msg">${
+      activeFilter === 'done'   ? '完了済みのタスクはありません' :
+      activeFilter === 'active' ? 'すべて完了しました！' :
+                                  'タスクを追加してみましょう'
+    }</div>`;
+    return;
+  }
+
+  if (hasCarry) {
+    area.appendChild(mkLabel(`持ち越しタスク（${visibleCarry.length}件）`));
+    const ul = document.createElement('div');
+    ul.className = 'task-list';
+    visibleCarry.forEach(t => ul.appendChild(buildItem(t, true)));
+    area.appendChild(ul);
+  }
+
+  // Own section
+  if (hasCarry) {
+    area.appendChild(mkLabel('この日のタスク'));
+  }
+
+  if (hasOwn) {
+    const ul = document.createElement('div');
+    ul.className = 'task-list';
+    visibleOwn.forEach(t => ul.appendChild(buildItem(t, false)));
+    area.appendChild(ul);
+  } else if (hasCarry) {
+    // Carryovers shown but no own todos matching filter — small note
+    const note = document.createElement('div');
+    note.className = 'empty-msg';
+    note.style.padding = '16px 0';
+    note.textContent = activeFilter === 'done' ? '完了済みはありません' : 'タスクはありません';
+    area.appendChild(note);
+  }
+}
+
+function mkLabel(text) {
+  const el = document.createElement('div');
+  el.className = 'section-lbl';
+  el.textContent = text;
+  return el;
+}
+
+function buildItem(t, isCarry) {
+  const item = document.createElement('div');
+  item.className = 'item' + (t.done ? ' done' : '');
+
+  const chk = document.createElement('input');
+  chk.type = 'checkbox';
+  chk.className = 'chk';
+  chk.checked = t.done;
+  chk.addEventListener('change', () => onToggle(t.id, item, chk));
+
+  const catTag = document.createElement('span');
+  catTag.className = `cat-tag ${t.category}`;
+  catTag.textContent = CAT[t.category] || t.category;
+
+  const textEl = document.createElement('span');
+  textEl.className = 'item-text';
+  textEl.textContent = t.text;
+
+  const del = document.createElement('button');
+  del.className = 'btn-del';
+  del.textContent = '✕';
+  del.title = '削除';
+  del.addEventListener('click', () => onDelete(t.id));
+
+  item.append(chk, catTag);
+
+  if (isCarry) {
+    const d = new Date(t.date + 'T00:00:00');
+    const badge = document.createElement('span');
+    badge.className = 'carry-badge';
+    badge.textContent = `${d.getMonth()+1}/${d.getDate()} から`;
+    item.appendChild(badge);
+  }
+
+  item.append(textEl, del);
+  return item;
+}
+
+// ─── Actions ───
+function onAdd() {
+  const input = document.getElementById('taskInput');
+  const text  = input.value.trim();
+  if (!text) { input.focus(); return; }
+  const cat = document.getElementById('catSelect').value;
+  todos.unshift({ id: Date.now(), text, done: false, date: selectedDate, category: cat });
+  input.value = '';
+  input.focus();
+  save();
+  buildSidebar();
+  renderMain();
+}
+
+function onToggle(id, itemEl, chkEl) {
+  const t = todos.find(t => t.id === id);
+  if (!t) return;
+  t.done = !t.done;
+  save();
+
+  if (t.done) {
+    itemEl.classList.add('completing');
+    spawnParticles(chkEl);
+    setTimeout(() => {
+      buildSidebar();
+      renderMain();
+    }, 560);
+  } else {
+    buildSidebar();
+    renderMain();
+  }
+}
+
+function onDelete(id) {
+  todos = todos.filter(t => t.id !== id);
+  save();
+  buildSidebar();
+  renderMain();
+}
+
+function onClearDone() {
+  todos = todos.filter(t => !(t.date === selectedDate && t.done));
+  save();
+  buildSidebar();
+  renderMain();
+}
+
+// ─── Particle System ───
+const canvas = document.getElementById('p-canvas');
+const ctx    = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+let particles = [];
+let rafId = null;
+
+const COLORS = ['#7c6af7','#a78cf7','#5af7a0','#f7a25a','#f75a5a','#f7e05a','#5ab8f7','#f75adb'];
+
+function spawnParticles(sourceEl) {
+  const r  = sourceEl.getBoundingClientRect();
+  const cx = r.left + r.width  / 2;
+  const cy = r.top  + r.height / 2;
+
+  for (let i = 0; i < 30; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 2.5 + Math.random() * 6;
+    particles.push({
+      x:        cx,
+      y:        cy,
+      vx:       Math.cos(angle) * speed,
+      vy:       Math.sin(angle) * speed - 1.5,
+      color:    COLORS[Math.floor(Math.random() * COLORS.length)],
+      w:        4 + Math.random() * 6,
+      h:        3 + Math.random() * 4,
+      life:     1,
+      decay:    0.022 + Math.random() * 0.018,
+      rot:      Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.25,
     });
   }
 
-  addBtn.addEventListener('click', addTodo);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') addTodo(); });
-  clearDoneBtn.addEventListener('click', clearDone);
+  if (!rafId) rafId = requestAnimationFrame(animLoop);
+}
 
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      filter = btn.dataset.filter;
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      render();
-    });
+function animLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles = particles.filter(p => p.life > 0);
+
+  for (const p of particles) {
+    p.x   += p.vx;
+    p.y   += p.vy;
+    p.vy  += 0.18;   // gravity
+    p.life -= p.decay;
+    p.rot  += p.rotSpeed;
+
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, p.life);
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.color;
+    // Rounded-rect confetti piece
+    roundRect(ctx, -p.w/2, -p.h/2, p.w, p.h, 1.5);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  if (particles.length > 0) {
+    rafId = requestAnimationFrame(animLoop);
+  } else {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    rafId = null;
+  }
+}
+
+function roundRect(c, x, y, w, h, r) {
+  c.beginPath();
+  c.moveTo(x + r, y);
+  c.lineTo(x + w - r, y);
+  c.quadraticCurveTo(x+w, y,   x+w, y+r);
+  c.lineTo(x+w, y+h-r);
+  c.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  c.lineTo(x+r, y+h);
+  c.quadraticCurveTo(x, y+h,   x, y+h-r);
+  c.lineTo(x, y+r);
+  c.quadraticCurveTo(x, y,     x+r, y);
+  c.closePath();
+}
+
+// ─── Events ───
+document.getElementById('addBtn').addEventListener('click', onAdd);
+document.getElementById('taskInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') onAdd();
+});
+document.getElementById('clearDoneBtn').addEventListener('click', onClearDone);
+
+document.querySelectorAll('.f-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeFilter = btn.dataset.filter;
+    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMain();
   });
+});
 
-  render();
+// ─── Init ───
+buildSidebar(true);
+renderMain();
 </script>
 </body>
 </html>
