@@ -482,7 +482,7 @@
       <option value="inrudder">仕事_InRudder</option>
       <option value="private">プライベート</option>
     </select>
-    <button class="btn-add" id="addBtn" title="追加 (Enter)">+</button>
+    <button type="button" class="btn-add" id="addBtn">+</button>
   </div>
 
   <!-- Filters -->
@@ -913,6 +913,9 @@ function roundRect(c, x, y, w, h, r) {
 
 // ─── Events ───
 document.getElementById('addBtn').addEventListener('click', onAdd);
+document.getElementById('taskInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') e.preventDefault(); // Enterでの誤追加を完全防止
+});
 document.getElementById('clearDoneBtn').addEventListener('click', onClearDone);
 
 document.querySelectorAll('.f-btn').forEach(btn => {
