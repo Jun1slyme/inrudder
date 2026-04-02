@@ -321,6 +321,37 @@
 
     .item.completing { animation: completePulse 0.55s ease forwards; }
 
+    /* Drag handle */
+    .drag-handle {
+      flex-shrink: 0;
+      color: var(--text-muted);
+      cursor: grab;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 2px 1px;
+      margin-top: 2px;
+      user-select: none;
+      touch-action: none;
+      opacity: 0;
+      transition: opacity 0.13s;
+    }
+
+    .item:hover .drag-handle { opacity: 0.6; }
+    .drag-handle:hover        { opacity: 1 !important; }
+    .drag-handle:active       { cursor: grabbing; }
+
+    /* Drag states */
+    .item.dragging {
+      opacity: 0.3 !important;
+      border-style: dashed !important;
+    }
+
+    .item.drag-over {
+      border-color: var(--accent) !important;
+      border-style: dashed !important;
+      background: rgba(124,106,247,0.07) !important;
+    }
+
     /* Checkbox */
     .chk {
       appearance: none;
@@ -666,6 +697,13 @@
 
       .item-memo { font-size: 0.76rem; }
 
+      /* ── Drag handle: always visible on mobile ── */
+      .drag-handle {
+        opacity: 0.5 !important;
+        font-size: 1.1rem;
+        padding: 4px 2px;
+      }
+
       /* ── Misc ── */
       .section-lbl { font-size: 0.65rem; }
     }
@@ -995,8 +1033,129 @@ function buildItem(t, isCarry) {
   memo.addEventListener('keydown', e => e.stopPropagation());
 
   body.append(top, memo);
-  item.append(chk, body);
+
+  // ── Drag handle ──
+  const handle = document.createElement('div');
+  handle.className = 'drag-handle';
+  handle.textContent = '⠿';
+  handle.title = 'ドラッグして並び替え';
+
+  item.dataset.id = String(t.id);
+  item.append(handle, chk, body);
+
+  setupDrag(item, t.id, handle);
   return item;
+}
+
+// ─── Drag & Drop ─────────────────────────────────
+let dragId = null;
+
+function setupDrag(item, id, handle) {
+  // ── Desktop (HTML5 DnD) ──
+  handle.addEventListener('mousedown', () => { item.draggable = true; });
+
+  item.addEventListener('dragstart', e => {
+    dragId = id;
+    e.dataTransfer.effectAllowed = 'move';
+    setTimeout(() => item.classList.add('dragging'), 0);
+  });
+
+  item.addEventListener('dragover', e => {
+    e.preventDefault();
+    if (dragId !== id) {
+      document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+      item.classList.add('drag-over');
+    }
+  });
+
+  item.addEventListener('dragleave', e => {
+    if (!item.contains(e.relatedTarget)) item.classList.remove('drag-over');
+  });
+
+  item.addEventListener('drop', e => {
+    e.preventDefault();
+    item.classList.remove('drag-over');
+    if (dragId !== null && dragId !== id) {
+      const rect   = item.getBoundingClientRect();
+      const before = e.clientY < rect.top + rect.height / 2;
+      reorderTodos(dragId, id, before);
+    }
+  });
+
+  item.addEventListener('dragend', () => {
+    item.draggable = false;
+    item.classList.remove('dragging');
+    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    dragId = null;
+  });
+
+  // ── Mobile (Touch) ──
+  let clone    = null;
+  let offX     = 0;
+  let offY     = 0;
+  let touchOver = null;
+
+  handle.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect  = item.getBoundingClientRect();
+    offX = touch.clientX - rect.left;
+    offY = touch.clientY - rect.top;
+    dragId = id;
+
+    clone = item.cloneNode(true);
+    Object.assign(clone.style, {
+      position: 'fixed', left: rect.left + 'px', top: rect.top + 'px',
+      width: rect.width + 'px', zIndex: '9998', pointerEvents: 'none',
+      opacity: '0.88', transform: 'scale(1.03) rotate(0.6deg)',
+      boxShadow: '0 10px 36px rgba(0,0,0,0.5)', margin: '0', animation: 'none',
+    });
+    document.body.appendChild(clone);
+    item.classList.add('dragging');
+  }, { passive: false });
+
+  handle.addEventListener('touchmove', e => {
+    if (dragId !== id || !clone) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    clone.style.left = (touch.clientX - offX) + 'px';
+    clone.style.top  = (touch.clientY - offY) + 'px';
+
+    clone.style.visibility = 'hidden';
+    const el       = document.elementFromPoint(touch.clientX, touch.clientY);
+    clone.style.visibility = '';
+    const overItem = el?.closest('.item[data-id]');
+    const overId   = overItem ? parseInt(overItem.dataset.id) : null;
+
+    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    if (overId !== null && overId !== id) {
+      overItem.classList.add('drag-over');
+      touchOver = overId;
+    } else {
+      touchOver = null;
+    }
+  }, { passive: false });
+
+  handle.addEventListener('touchend', () => {
+    if (dragId !== id) return;
+    clone?.remove(); clone = null;
+    item.classList.remove('dragging');
+    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    if (touchOver !== null && touchOver !== id) reorderTodos(id, touchOver, false);
+    dragId = null; touchOver = null;
+  });
+}
+
+function reorderTodos(srcId, tgtId, insertBefore) {
+  const srcIdx = todos.findIndex(t => t.id === srcId);
+  const tgtIdx = todos.findIndex(t => t.id === tgtId);
+  if (srcIdx === -1 || tgtIdx === -1) return;
+  const [removed] = todos.splice(srcIdx, 1);
+  const newTgt    = todos.findIndex(t => t.id === tgtId);
+  todos.splice(insertBefore ? newTgt : newTgt + 1, 0, removed);
+  save();
+  buildSidebar();
+  renderMain();
 }
 
 // ─── Inline name edit ────────────────────────────
