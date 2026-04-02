@@ -2,22 +2,22 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>TODO</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:          #0f0f13;
-      --sidebar-bg:  #111118;
-      --surface:     #1a1a24;
-      --border:      #2a2a3a;
-      --accent:      #7c6af7;
-      --text:        #e8e8f0;
-      --text-muted:  #6b6b82;
-      --danger:      #f75a5a;
-      --success:     #5af7a0;
-      --radius:      12px;
+      --bg:           #0f0f13;
+      --sidebar-bg:   #111118;
+      --surface:      #1a1a24;
+      --border:       #2a2a3a;
+      --accent:       #7c6af7;
+      --text:         #e8e8f0;
+      --text-muted:   #6b6b82;
+      --danger:       #f75a5a;
+      --success:      #5af7a0;
+      --radius:       12px;
       --cat-recruit:  #f7a25a;
       --cat-inrudder: #7c6af7;
       --cat-private:  #5af7a0;
@@ -27,12 +27,14 @@
       background: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      height: 100vh;
+      height: 100dvh;
       display: flex;
       overflow: hidden;
     }
 
-    /* ── Sidebar ── */
+    /* ══════════════════════════════
+       SIDEBAR  (desktop = left col)
+       ══════════════════════════════ */
     .sidebar {
       width: 170px;
       flex-shrink: 0;
@@ -76,7 +78,7 @@
     .date-item:hover  { background: var(--surface); }
     .date-item.active { background: var(--accent); }
 
-    .date-item .d-label {
+    .d-label {
       font-size: 0.9rem;
       font-weight: 600;
       display: flex;
@@ -94,19 +96,11 @@
 
     .date-item.active .today-badge { background: rgba(255,255,255,0.25); }
 
-    .date-item .d-week {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-    }
-
+    .d-week { font-size: 0.68rem; color: var(--text-muted); }
     .date-item.active .d-week,
     .date-item.active .d-count { color: rgba(255,255,255,0.65); }
 
-    .date-item .d-count {
-      font-size: 0.67rem;
-      color: var(--text-muted);
-      margin-top: 1px;
-    }
+    .d-count { font-size: 0.67rem; color: var(--text-muted); margin-top: 1px; }
 
     .has-todo-dot {
       width: 5px; height: 5px;
@@ -119,7 +113,9 @@
 
     .date-item.active .has-todo-dot { background: rgba(255,255,255,0.5); }
 
-    /* ── Main ── */
+    /* ══════════════════════════════
+       MAIN
+       ══════════════════════════════ */
     .main {
       flex: 1;
       display: flex;
@@ -129,7 +125,7 @@
     }
 
     .main-header {
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       flex-shrink: 0;
     }
 
@@ -164,15 +160,18 @@
       transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
     }
 
-    /* ── Input ── */
-    .input-row {
-      display: flex;
-      gap: 8px;
+    /* ── Input area ── */
+    .input-area {
       margin-bottom: 16px;
       flex-shrink: 0;
     }
 
-    .input-row input {
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .task-input {
       flex: 1;
       background: var(--surface);
       border: 1px solid var(--border);
@@ -185,8 +184,8 @@
       min-width: 0;
     }
 
-    .input-row input::placeholder { color: var(--text-muted); }
-    .input-row input:focus { border-color: var(--accent); }
+    .task-input::placeholder { color: var(--text-muted); }
+    .task-input:focus { border-color: var(--accent); }
 
     .cat-select {
       background: var(--surface);
@@ -222,7 +221,7 @@
       display: flex;
       gap: 5px;
       flex-wrap: wrap;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       flex-shrink: 0;
     }
 
@@ -235,23 +234,21 @@
       font-size: 0.73rem;
       padding: 4px 11px;
       transition: all 0.13s;
+      white-space: nowrap;
     }
 
-    .f-btn:hover        { border-color: var(--accent); color: var(--text); }
-    .f-btn.active       { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .f-btn:hover  { border-color: var(--accent); color: var(--text); }
+    .f-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-    /* ── Stats row ── */
+    /* ── Stats ── */
     .stats-row {
       display: flex;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       flex-shrink: 0;
     }
 
-    .stats-txt {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
+    .stats-txt { font-size: 0.78rem; color: var(--text-muted); }
 
     .clear-btn {
       margin-left: auto;
@@ -289,23 +286,23 @@
     .task-list {
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 8px;
       margin-bottom: 4px;
     }
 
-    /* ── Item ── */
+    /* ══════════════════════════════
+       TASK ITEM
+       ══════════════════════════════ */
     .item {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 11px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 13px 15px;
+      padding: 13px 14px;
       transition: border-color 0.13s;
       animation: slideIn 0.17s ease;
-      position: relative;
-      overflow: hidden;
     }
 
     @keyframes slideIn {
@@ -314,26 +311,20 @@
     }
 
     .item:hover { border-color: #3a3a50; }
+    .item.done  { opacity: 0.42; }
 
-    .item.done {
-      opacity: 0.42;
-    }
-
-    /* Completion flash */
     @keyframes completePulse {
-      0%   { background: var(--surface); }
-      25%  { background: rgba(90,247,160,0.10); border-color: rgba(90,247,160,0.35); }
-      100% { background: var(--surface); }
+      0%  { background: var(--surface); }
+      25% { background: rgba(90,247,160,0.10); border-color: rgba(90,247,160,0.35); }
+      100%{ background: var(--surface); }
     }
 
-    .item.completing {
-      animation: completePulse 0.55s ease forwards;
-    }
+    .item.completing { animation: completePulse 0.55s ease forwards; }
 
     /* Checkbox */
     .chk {
       appearance: none;
-      width: 19px; height: 19px;
+      width: 20px; height: 20px;
       border-radius: 50%;
       border: 2px solid var(--border);
       flex-shrink: 0;
@@ -341,6 +332,7 @@
       outline: none;
       position: relative;
       transition: border-color 0.13s, background 0.13s;
+      margin-top: 1px;
     }
 
     .chk:hover { border-color: var(--accent); }
@@ -361,10 +353,26 @@
       content: '';
       position: absolute;
       top: 2px; left: 4.5px;
-      width: 6px; height: 9px;
+      width: 7px; height: 10px;
       border: 2px solid #0f0f13;
       border-top: none; border-left: none;
       transform: rotate(45deg);
+    }
+
+    /* Item body */
+    .item-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top row */
+    .item-top {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
     }
 
     /* Category tag */
@@ -382,7 +390,7 @@
     .cat-tag.inrudder { background: rgba(124,106,247,0.15); color: var(--cat-inrudder); }
     .cat-tag.private  { background: rgba(90,247,160,0.12); color: var(--cat-private); }
 
-    /* Carryover date badge */
+    /* Carryover badge */
     .carry-badge {
       font-size: 0.62rem;
       padding: 2px 7px;
@@ -393,11 +401,14 @@
       background: rgba(247,90,90,0.10);
     }
 
+    /* Task name */
     .item-text {
       flex: 1;
       font-size: 0.93rem;
       line-height: 1.4;
       word-break: break-word;
+      min-width: 0;
+      cursor: default;
     }
 
     .done .item-text {
@@ -405,9 +416,37 @@
       color: var(--text-muted);
     }
 
+    /* Memo textarea */
+    .item-memo {
+      width: 100%;
+      background: none;
+      border: none;
+      border-top: 1px solid transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      outline: none;
+      resize: none;
+      overflow: hidden;
+      padding: 5px 0 0;
+      margin-top: 5px;
+      transition: border-top-color 0.13s, color 0.13s;
+    }
+
+    .item-memo:focus {
+      border-top-color: var(--border);
+      color: var(--text);
+    }
+
+    .item-memo::placeholder { color: #333345; }
+
+    .done .item-memo { pointer-events: none; }
+
+    /* Delete button */
     .btn-del {
       background: rgba(247,90,90,0.07);
-      border: 1px solid rgba(247,90,90,0.18);
+      border: 1px solid rgba(247,90,90,0.2);
       border-radius: 6px;
       color: var(--danger);
       cursor: pointer;
@@ -419,9 +458,9 @@
       white-space: nowrap;
     }
 
-    .btn-del:hover { background: rgba(247,90,90,0.18); border-color: rgba(247,90,90,0.4); }
+    .btn-del:hover { background: rgba(247,90,90,0.18); border-color: rgba(247,90,90,0.45); }
 
-    /* Inline edit input */
+    /* Inline name edit */
     .edit-input {
       flex: 1;
       background: var(--bg);
@@ -431,7 +470,7 @@
       font-size: 0.93rem;
       line-height: 1.4;
       outline: none;
-      padding: 2px 8px;
+      padding: 1px 8px;
       min-width: 0;
     }
 
@@ -449,6 +488,162 @@
       pointer-events: none;
       z-index: 9999;
     }
+
+    /* ══════════════════════════════
+       MOBILE  (≤ 640px)
+       ══════════════════════════════ */
+    @media (max-width: 640px) {
+      body {
+        flex-direction: column;
+        height: 100dvh;
+      }
+
+      /* Sidebar → horizontal top strip */
+      .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        flex-shrink: 0;
+      }
+
+      .sidebar-logo {
+        padding: 14px 16px 8px;
+        font-size: 1rem;
+        border-bottom: none;
+      }
+
+      .sidebar-dates {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0 10px 10px;
+        gap: 4px;
+        scrollbar-width: none;
+      }
+
+      .sidebar-dates::-webkit-scrollbar { display: none; }
+
+      .date-item {
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+        min-width: 52px;
+        padding: 7px 8px;
+        margin: 0;
+        text-align: center;
+        border-radius: 9px;
+      }
+
+      .d-label {
+        font-size: 0.85rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+      }
+
+      .d-week { font-size: 0.63rem; }
+      .d-count { display: none; }
+
+      .has-todo-dot {
+        right: 4px; top: 4px;
+        transform: none;
+        width: 4px; height: 4px;
+      }
+
+      /* Main → scrollable column */
+      .main {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 16px 14px;
+        /* space for fixed input bar at bottom */
+        padding-bottom: 90px;
+      }
+
+      .main-date-label { font-size: 1.2rem; }
+
+      /* Input area → fixed at bottom */
+      .input-area {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        z-index: 100;
+        background: var(--sidebar-bg);
+        border-top: 1px solid var(--border);
+        padding: 10px 14px;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+        margin-bottom: 0;
+      }
+
+      .input-row {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      /* Full-width text input */
+      .task-input {
+        width: 100%;
+        flex: none;
+        font-size: 1rem;
+        padding: 10px 14px;
+      }
+
+      /* Cat select + add button share second row */
+      .cat-select {
+        flex: 1;
+        font-size: 0.85rem;
+        padding: 8px 10px;
+        height: 40px;
+      }
+
+      .btn-add {
+        width: 48px;
+        height: 40px;
+        font-size: 1.4rem;
+      }
+
+      /* Filters → horizontal scroll */
+      .filter-bar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        padding-bottom: 2px;
+        margin-bottom: 10px;
+      }
+
+      .filter-bar::-webkit-scrollbar { display: none; }
+
+      /* Task items */
+      .item {
+        padding: 11px 12px;
+        gap: 10px;
+      }
+
+      .chk {
+        width: 22px; height: 22px;
+      }
+
+      .chk:checked::after {
+        top: 3px; left: 5.5px;
+        width: 7px; height: 10px;
+      }
+
+      .item-text { font-size: 0.9rem; }
+
+      .btn-del {
+        font-size: 0.7rem;
+        padding: 5px 9px;
+      }
+
+      /* Task area: no internal scroll on mobile (main handles it) */
+      .task-area {
+        flex: none;
+        overflow: visible;
+        padding-right: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -463,6 +658,7 @@
 
 <!-- Main -->
 <main class="main">
+
   <!-- Header -->
   <div class="main-header">
     <div class="main-date-label" id="mainDateLabel"></div>
@@ -475,38 +671,42 @@
   </div>
 
   <!-- Input -->
-  <div class="input-row">
-    <input type="text" id="taskInput" placeholder="新しいタスクを入力..." maxlength="200" autocomplete="off">
-    <select class="cat-select" id="catSelect">
-      <option value="recruit">仕事_Recruit</option>
-      <option value="inrudder">仕事_InRudder</option>
-      <option value="private">プライベート</option>
-    </select>
-    <button type="button" class="btn-add" id="addBtn">+</button>
+  <div class="input-area">
+    <div class="input-row">
+      <input type="text" class="task-input" id="taskInput"
+             placeholder="新しいタスクを入力..." maxlength="200" autocomplete="off">
+      <select class="cat-select" id="catSelect">
+        <option value="recruit">仕事_Recruit</option>
+        <option value="inrudder">仕事_InRudder</option>
+        <option value="private">プライベート</option>
+      </select>
+      <button type="button" class="btn-add" id="addBtn">+</button>
+    </div>
   </div>
 
   <!-- Filters -->
   <div class="filter-bar">
-    <button class="f-btn active" data-filter="all">すべて</button>
-    <button class="f-btn" data-filter="active">未完了</button>
-    <button class="f-btn" data-filter="done">完了</button>
-    <button class="f-btn" data-filter="recruit">仕事_Recruit</button>
-    <button class="f-btn" data-filter="inrudder">仕事_InRudder</button>
-    <button class="f-btn" data-filter="private">プライベート</button>
+    <button type="button" class="f-btn active" data-filter="all">すべて</button>
+    <button type="button" class="f-btn" data-filter="active">未完了</button>
+    <button type="button" class="f-btn" data-filter="done">完了</button>
+    <button type="button" class="f-btn" data-filter="recruit">仕事_Recruit</button>
+    <button type="button" class="f-btn" data-filter="inrudder">仕事_InRudder</button>
+    <button type="button" class="f-btn" data-filter="private">プライベート</button>
   </div>
 
   <!-- Stats -->
   <div class="stats-row">
     <span class="stats-txt" id="statsTxt"></span>
-    <button class="clear-btn" id="clearDoneBtn" style="display:none">完了済みを削除</button>
+    <button type="button" class="clear-btn" id="clearDoneBtn" style="display:none">完了済みを削除</button>
   </div>
 
   <!-- Tasks -->
   <div class="task-area" id="taskArea"></div>
+
 </main>
 
 <script>
-// ─── Constants ───
+// ─── Constants ───────────────────────────────────
 const STORAGE_KEY = 'todos_v3';
 const WEEKDAYS = ['日','月','火','水','木','金','土'];
 const CAT = {
@@ -515,47 +715,49 @@ const CAT = {
   private:  'プライベート',
 };
 
-// ─── State ───
+// ─── State ───────────────────────────────────────
 let todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 let selectedDate = todayStr();
 let activeFilter = 'all';
 
 function todayStr() {
   const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
 
 function dateToStr(d) {
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
+
+function pad(n) { return String(n).padStart(2, '0'); }
 
 function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 }
 
-// ─── Sidebar ───
+// ─── Sidebar ─────────────────────────────────────
 function buildSidebar(scrollToSelected = false) {
   const container = document.getElementById('sidebarDates');
   container.innerHTML = '';
 
   const today = new Date();
-  today.setHours(0,0,0,0);
+  today.setHours(0, 0, 0, 0);
   const todayS = todayStr();
-
   let selectedEl = null;
 
   for (let offset = -60; offset <= 60; offset++) {
     const d = new Date(today);
     d.setDate(today.getDate() + offset);
-    const ds = dateToStr(d);
+    const ds         = dateToStr(d);
     const isToday    = ds === todayS;
     const isSelected = ds === selectedDate;
     const ownTodos   = todos.filter(t => t.date === ds);
     const doneCount  = ownTodos.filter(t => t.done).length;
 
     const el = document.createElement('div');
-    el.className = 'date-item' + (isToday ? ' today' : '') + (isSelected ? ' active' : '');
-    el.dataset.date = ds;
+    el.className = 'date-item' +
+      (isToday    ? ' today'  : '') +
+      (isSelected ? ' active' : '');
 
     const labelDiv = document.createElement('div');
     labelDiv.className = 'd-label';
@@ -598,63 +800,53 @@ function buildSidebar(scrollToSelected = false) {
 
   if (scrollToSelected && selectedEl) {
     requestAnimationFrame(() => {
-      selectedEl.scrollIntoView({ block: 'center' });
+      selectedEl.scrollIntoView({ block: 'center', inline: 'center' });
     });
   }
 }
 
-// ─── Main render ───
+// ─── Main render ─────────────────────────────────
 function renderMain() {
-  const d = new Date(selectedDate + 'T00:00:00');
-  const todayS = todayStr();
+  const d       = new Date(selectedDate + 'T00:00:00');
+  const todayS  = todayStr();
   const isToday  = selectedDate === todayS;
   const isFuture = selectedDate > todayS;
 
-  // Header
   document.getElementById('mainDateLabel').textContent =
     `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${WEEKDAYS[d.getDay()]}）`;
   document.getElementById('mainMeta').textContent =
     isToday ? '今日のタスク' : isFuture ? '予定' : '過去のタスク';
 
-  // Own todos
   const ownTodos  = todos.filter(t => t.date === selectedDate);
   const doneCount = ownTodos.filter(t => t.done).length;
 
-  // Progress
   const pct = ownTodos.length > 0 ? Math.round(doneCount / ownTodos.length * 100) : 0;
   document.getElementById('progressFill').style.width = pct + '%';
-
-  // Stats
   document.getElementById('statsTxt').textContent =
     ownTodos.length > 0 ? `${doneCount} / ${ownTodos.length} 件完了` : '';
   document.getElementById('clearDoneBtn').style.display =
     doneCount > 0 ? 'inline' : 'none';
 
-  // Carryover: incomplete tasks from before selectedDate (only shown for today/future)
+  // Carryover: past incomplete tasks (shown on today / future dates)
   let carryovers = [];
   if (selectedDate >= todayS) {
     carryovers = todos.filter(t => t.date < selectedDate && !t.done);
   }
 
-  // Apply filter
   const applyFilter = (list) => {
     switch (activeFilter) {
-      case 'active':   return list.filter(t => !t.done);
-      case 'done':     return list.filter(t =>  t.done);
+      case 'active':                     return list.filter(t => !t.done);
+      case 'done':                       return list.filter(t =>  t.done);
       case 'recruit':
       case 'inrudder':
-      case 'private':  return list.filter(t => t.category === activeFilter);
-      default:         return list;
+      case 'private': return list.filter(t => t.category === activeFilter);
+      default:        return list;
     }
   };
 
   const visibleOwn   = applyFilter(ownTodos);
-  // Carryovers are always incomplete — skip when filter is 'done'
-  const visibleCarry = activeFilter === 'done'
-    ? []
-    : applyFilter(carryovers);
+  const visibleCarry = activeFilter === 'done' ? [] : applyFilter(carryovers);
 
-  // Render
   const area = document.getElementById('taskArea');
   area.innerHTML = '';
 
@@ -664,7 +856,7 @@ function renderMain() {
   if (!hasCarry && !hasOwn) {
     area.innerHTML = `<div class="empty-msg">${
       activeFilter === 'done'   ? '完了済みのタスクはありません' :
-      activeFilter === 'active' ? 'すべて完了しました！' :
+      activeFilter === 'active' ? 'すべて完了しました！'         :
                                   'タスクを追加してみましょう'
     }</div>`;
     return;
@@ -678,10 +870,7 @@ function renderMain() {
     area.appendChild(ul);
   }
 
-  // Own section
-  if (hasCarry) {
-    area.appendChild(mkLabel('この日のタスク'));
-  }
+  if (hasCarry) area.appendChild(mkLabel('この日のタスク'));
 
   if (hasOwn) {
     const ul = document.createElement('div');
@@ -689,11 +878,10 @@ function renderMain() {
     visibleOwn.forEach(t => ul.appendChild(buildItem(t, false)));
     area.appendChild(ul);
   } else if (hasCarry) {
-    // Carryovers shown but no own todos matching filter — small note
     const note = document.createElement('div');
     note.className = 'empty-msg';
     note.style.padding = '16px 0';
-    note.textContent = activeFilter === 'done' ? '完了済みはありません' : 'タスクはありません';
+    note.textContent = 'タスクはありません';
     area.appendChild(note);
   }
 }
@@ -705,15 +893,25 @@ function mkLabel(text) {
   return el;
 }
 
+// ─── Build item ──────────────────────────────────
 function buildItem(t, isCarry) {
   const item = document.createElement('div');
   item.className = 'item' + (t.done ? ' done' : '');
 
+  // ── Checkbox ──
   const chk = document.createElement('input');
   chk.type = 'checkbox';
   chk.className = 'chk';
   chk.checked = t.done;
   chk.addEventListener('change', () => onToggle(t.id, item, chk));
+
+  // ── Body ──
+  const body = document.createElement('div');
+  body.className = 'item-body';
+
+  // Top row: [cat] [carry?] [name] [del]
+  const top = document.createElement('div');
+  top.className = 'item-top';
 
   const catTag = document.createElement('span');
   catTag.className = `cat-tag ${t.category}`;
@@ -722,30 +920,61 @@ function buildItem(t, isCarry) {
   const textEl = document.createElement('span');
   textEl.className = 'item-text';
   textEl.textContent = t.text;
-
-  // ダブルクリックで編集
+  textEl.title = 'ダブルクリックで編集';
   textEl.addEventListener('dblclick', () => startEdit(t.id, textEl));
 
   const del = document.createElement('button');
+  del.type = 'button';
   del.className = 'btn-del';
   del.textContent = '削除';
   del.addEventListener('click', () => onDelete(t.id));
 
-  item.append(chk, catTag);
+  top.appendChild(catTag);
 
   if (isCarry) {
     const d = new Date(t.date + 'T00:00:00');
     const badge = document.createElement('span');
     badge.className = 'carry-badge';
     badge.textContent = `${d.getMonth()+1}/${d.getDate()} から`;
-    item.appendChild(badge);
+    top.appendChild(badge);
   }
 
-  item.append(textEl, del);
+  top.append(textEl, del);
+
+  // ── Memo textarea ──
+  const memo = document.createElement('textarea');
+  memo.className = 'item-memo';
+  memo.placeholder = 'メモを追加...';
+  memo.value = t.memo || '';
+  memo.rows = 1;
+  if (t.done) memo.disabled = true;
+
+  // Auto-resize
+  const resize = () => {
+    memo.style.height = 'auto';
+    memo.style.height = memo.scrollHeight + 'px';
+  };
+  memo.addEventListener('input', resize);
+  requestAnimationFrame(resize);
+
+  // Save on blur (no re-render needed)
+  memo.addEventListener('blur', () => {
+    const v = memo.value;
+    if (v !== (t.memo || '')) {
+      t.memo = v;
+      save();
+    }
+  });
+
+  // Stop Enter/keys from bubbling to window
+  memo.addEventListener('keydown', e => e.stopPropagation());
+
+  body.append(top, memo);
+  item.append(chk, body);
   return item;
 }
 
-// ─── Inline edit ───
+// ─── Inline name edit ────────────────────────────
 function startEdit(id, textEl) {
   const t = todos.find(t => t.id === id);
   if (!t) return;
@@ -778,13 +1007,20 @@ function startEdit(id, textEl) {
   inp.addEventListener('blur', commit);
 }
 
-// ─── Actions ───
+// ─── Actions ─────────────────────────────────────
 function onAdd() {
   const input = document.getElementById('taskInput');
   const text  = input.value.trim();
   if (!text) { input.focus(); return; }
   const cat = document.getElementById('catSelect').value;
-  todos.unshift({ id: Date.now(), text, done: false, date: selectedDate, category: cat });
+  todos.unshift({
+    id: Date.now(),
+    text,
+    memo: '',
+    done: false,
+    date: selectedDate,
+    category: cat,
+  });
   input.value = '';
   input.focus();
   save();
@@ -801,10 +1037,7 @@ function onToggle(id, itemEl, chkEl) {
   if (t.done) {
     itemEl.classList.add('completing');
     spawnParticles(chkEl);
-    setTimeout(() => {
-      buildSidebar();
-      renderMain();
-    }, 560);
+    setTimeout(() => { buildSidebar(); renderMain(); }, 560);
   } else {
     buildSidebar();
     renderMain();
@@ -825,7 +1058,7 @@ function onClearDone() {
   renderMain();
 }
 
-// ─── Particle System ───
+// ─── Particle system ─────────────────────────────
 const canvas = document.getElementById('p-canvas');
 const ctx    = canvas.getContext('2d');
 
@@ -837,8 +1070,7 @@ resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
 let particles = [];
-let rafId = null;
-
+let rafId     = null;
 const COLORS = ['#7c6af7','#a78cf7','#5af7a0','#f7a25a','#f75a5a','#f7e05a','#5ab8f7','#f75adb'];
 
 function spawnParticles(sourceEl) {
@@ -850,16 +1082,15 @@ function spawnParticles(sourceEl) {
     const angle = Math.random() * Math.PI * 2;
     const speed = 2.5 + Math.random() * 6;
     particles.push({
-      x:        cx,
-      y:        cy,
-      vx:       Math.cos(angle) * speed,
-      vy:       Math.sin(angle) * speed - 1.5,
-      color:    COLORS[Math.floor(Math.random() * COLORS.length)],
-      w:        4 + Math.random() * 6,
-      h:        3 + Math.random() * 4,
-      life:     1,
-      decay:    0.022 + Math.random() * 0.018,
-      rot:      Math.random() * Math.PI * 2,
+      x: cx, y: cy,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 1.5,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      w: 4 + Math.random() * 6,
+      h: 3 + Math.random() * 4,
+      life: 1,
+      decay: 0.022 + Math.random() * 0.018,
+      rot: Math.random() * Math.PI * 2,
       rotSpeed: (Math.random() - 0.5) * 0.25,
     });
   }
@@ -872,9 +1103,9 @@ function animLoop() {
   particles = particles.filter(p => p.life > 0);
 
   for (const p of particles) {
-    p.x   += p.vx;
-    p.y   += p.vy;
-    p.vy  += 0.18;   // gravity
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.18;
     p.life -= p.decay;
     p.rot  += p.rotSpeed;
 
@@ -883,7 +1114,6 @@ function animLoop() {
     ctx.translate(p.x, p.y);
     ctx.rotate(p.rot);
     ctx.fillStyle = p.color;
-    // Rounded-rect confetti piece
     roundRect(ctx, -p.w/2, -p.h/2, p.w, p.h, 1.5);
     ctx.fill();
     ctx.restore();
@@ -899,8 +1129,7 @@ function animLoop() {
 
 function roundRect(c, x, y, w, h, r) {
   c.beginPath();
-  c.moveTo(x + r, y);
-  c.lineTo(x + w - r, y);
+  c.moveTo(x+r, y); c.lineTo(x+w-r, y);
   c.quadraticCurveTo(x+w, y,   x+w, y+r);
   c.lineTo(x+w, y+h-r);
   c.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
@@ -911,11 +1140,14 @@ function roundRect(c, x, y, w, h, r) {
   c.closePath();
 }
 
-// ─── Events ───
+// ─── Event listeners ─────────────────────────────
 document.getElementById('addBtn').addEventListener('click', onAdd);
+
+// Prevent Enter from adding task (IME対策)
 document.getElementById('taskInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') e.preventDefault(); // Enterでの誤追加を完全防止
+  if (e.key === 'Enter') e.preventDefault();
 });
+
 document.getElementById('clearDoneBtn').addEventListener('click', onClearDone);
 
 document.querySelectorAll('.f-btn').forEach(btn => {
@@ -927,7 +1159,7 @@ document.querySelectorAll('.f-btn').forEach(btn => {
   });
 });
 
-// ─── Init ───
+// ─── Init ────────────────────────────────────────
 buildSidebar(true);
 renderMain();
 </script>
