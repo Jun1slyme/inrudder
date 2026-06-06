@@ -616,6 +616,50 @@ function setupDrag(item, id, handle) {
     document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
     dragId = null;
   });
+
+  // タッチドラッグ
+  let clone = null, offX = 0, offY = 0, touchOver = null;
+  handle.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const rect = item.getBoundingClientRect();
+    offX = touch.clientX - rect.left; offY = touch.clientY - rect.top;
+    dragId = id;
+    clone = item.cloneNode(true);
+    Object.assign(clone.style, {
+      position: 'fixed', left: rect.left + 'px', top: rect.top + 'px',
+      width: rect.width + 'px', zIndex: '9998', pointerEvents: 'none',
+      opacity: '0.88', transform: 'scale(1.03) rotate(0.6deg)',
+      boxShadow: '0 10px 36px rgba(0,0,0,0.5)', margin: '0', animation: 'none',
+    });
+    document.body.appendChild(clone);
+    item.classList.add('dragging');
+  }, { passive: false });
+
+  handle.addEventListener('touchmove', e => {
+    if (dragId !== id || !clone) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    clone.style.left = (touch.clientX - offX) + 'px';
+    clone.style.top  = (touch.clientY - offY) + 'px';
+    clone.style.visibility = 'hidden';
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    clone.style.visibility = '';
+    const overItem = el?.closest('.item[data-id]');
+    const overId = overItem ? parseInt(overItem.dataset.id) : null;
+    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    if (overId !== null && overId !== id) { overItem.classList.add('drag-over'); touchOver = overId; }
+    else { touchOver = null; }
+  }, { passive: false });
+
+  handle.addEventListener('touchend', () => {
+    if (dragId !== id) return;
+    clone?.remove(); clone = null;
+    item.classList.remove('dragging');
+    document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    if (touchOver !== null && touchOver !== id) reorderTodos(id, touchOver, false);
+    dragId = null; touchOver = null;
+  });
 }
 
 function reorderTodos(srcId, tgtId, insertBefore) {
