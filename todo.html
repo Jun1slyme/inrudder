@@ -12,7 +12,7 @@
   --text-muted: #6b6b82; --danger: #f75a5a; --success: #5af7a0;
   --radius: 12px;
   --cat-recruit: #f7a25a; --cat-inrudder: #7c6af7; --cat-private: #5af7a0;
-  --pri-high: #f75a5a; --pri-mid: #f7a25a; --pri-low: #5ab8f7;
+  --time-morning: #f7d95a; --time-forenoon: #5af7a0; --time-afternoon: #5ab8f7; --time-evening: #a78cf7;
 }
 body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; height: 100dvh; display: flex; overflow: hidden; }
 
@@ -100,10 +100,11 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 /* タスクアイテム */
 .item { display: flex; align-items: flex-start; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 11px 13px; transition: border-color 0.13s; animation: slideIn 0.17s ease; position: relative; overflow: hidden; }
 .item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
-.item.pri-high::before { background: var(--pri-high); }
-.item.pri-mid::before  { background: var(--pri-mid); }
-.item.pri-low::before  { background: var(--pri-low); }
-.item.pri-none::before { background: transparent; }
+.item.time-morning::before   { background: var(--time-morning); }
+.item.time-forenoon::before  { background: var(--time-forenoon); }
+.item.time-afternoon::before { background: var(--time-afternoon); }
+.item.time-evening::before   { background: var(--time-evening); }
+.item.time-none::before      { background: transparent; }
 @keyframes slideIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 .item:hover { border-color: #3a3a50; }
 .item.done { opacity: 0.4; }
@@ -126,10 +127,11 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .cat-tag.recruit { background: rgba(247,162,90,0.13); color: var(--cat-recruit); }
 .cat-tag.inrudder { background: rgba(124,106,247,0.15); color: var(--cat-inrudder); }
 .cat-tag.private { background: rgba(90,247,160,0.12); color: var(--cat-private); }
-.pri-badge { font-size: 0.58rem; font-weight: 700; padding: 1px 6px; border-radius: 20px; flex-shrink: 0; letter-spacing: 0.03em; }
-.pri-badge.high { background: rgba(247,90,90,0.13); color: var(--pri-high); }
-.pri-badge.mid  { background: rgba(247,162,90,0.13); color: var(--pri-mid); }
-.pri-badge.low  { background: rgba(90,184,247,0.13); color: var(--pri-low); }
+.time-badge { font-size: 0.58rem; font-weight: 700; padding: 1px 7px; border-radius: 20px; flex-shrink: 0; letter-spacing: 0.02em; }
+.time-badge.morning   { background: rgba(247,217,90,0.15);  color: var(--time-morning); }
+.time-badge.forenoon  { background: rgba(90,247,160,0.12);  color: var(--time-forenoon); }
+.time-badge.afternoon { background: rgba(90,184,247,0.13);  color: var(--time-afternoon); }
+.time-badge.evening   { background: rgba(167,140,247,0.15); color: var(--time-evening); }
 .item-text { flex: 1; font-size: 0.91rem; line-height: 1.4; word-break: break-word; min-width: 0; cursor: default; }
 .done .item-text { text-decoration: line-through; color: var(--text-muted); }
 .item-memo { width: 100%; background: none; border: none; border-top: 1px solid transparent; color: var(--text-muted); font-family: inherit; font-size: 0.76rem; line-height: 1.55; outline: none; resize: none; overflow: hidden; padding: 4px 0 0; margin-top: 4px; transition: border-top-color 0.13s, color 0.13s; }
@@ -166,9 +168,11 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .week-col-body::-webkit-scrollbar-thumb { background: var(--border); }
 .week-item { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font-size: 0.73rem; cursor: grab; position: relative; overflow: hidden; display: flex; align-items: flex-start; gap: 5px; transition: border-color 0.13s, opacity 0.13s; }
 .week-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; }
-.week-item.pri-high::before { background: var(--pri-high); }
-.week-item.pri-mid::before  { background: var(--pri-mid); }
-.week-item.pri-low::before  { background: var(--pri-low); }
+.week-item.time-morning::before   { background: var(--time-morning); }
+.week-item.time-forenoon::before  { background: var(--time-forenoon); }
+.week-item.time-afternoon::before { background: var(--time-afternoon); }
+.week-item.time-evening::before   { background: var(--time-evening); }
+.week-item.time-none::before      { background: transparent; }
 .week-item.done-item { opacity: 0.35; }
 .week-item:hover { border-color: #3a3a50; }
 .week-item.dragging { opacity: 0.25; }
@@ -269,10 +273,11 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
           <option value="private">プライベート</option>
         </select>
         <select class="pri-select" id="priSelect">
-          <option value="none">優先度</option>
-          <option value="high">🔴 高</option>
-          <option value="mid">🟠 中</option>
-          <option value="low">🔵 低</option>
+          <option value="none">時間帯</option>
+          <option value="morning">🌅 朝</option>
+          <option value="forenoon">☀️ 午前中</option>
+          <option value="afternoon">🌤 午後</option>
+          <option value="evening">🌙 夜</option>
         </select>
         <button type="button" class="btn-add" id="addBtn">+</button>
       </div>
@@ -282,8 +287,10 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
       <button type="button" class="f-btn active" data-filter="all">すべて</button>
       <button type="button" class="f-btn" data-filter="active">未完了</button>
       <button type="button" class="f-btn" data-filter="done">完了</button>
-      <button type="button" class="f-btn" data-filter="high">🔴 高</button>
-      <button type="button" class="f-btn" data-filter="mid">🟠 中</button>
+      <button type="button" class="f-btn" data-filter="morning">🌅 朝</button>
+      <button type="button" class="f-btn" data-filter="forenoon">☀️ 午前中</button>
+      <button type="button" class="f-btn" data-filter="afternoon">🌤 午後</button>
+      <button type="button" class="f-btn" data-filter="evening">🌙 夜</button>
       <button type="button" class="f-btn" data-filter="recruit">Recruit</button>
       <button type="button" class="f-btn" data-filter="inrudder">InRudder</button>
       <button type="button" class="f-btn" data-filter="private">プライベート</button>
@@ -311,16 +318,22 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 </main>
 
 <script>
-const STORAGE_KEY = 'todos_v4';
+const STORAGE_KEY = 'todos_v5';
 const WEEKDAYS = ['日','月','火','水','木','金','土'];
 const CAT = { recruit: '仕事_Recruit', inrudder: '仕事_InRudder', private: 'プライベート' };
-const PRI_LABEL = { high: '高', mid: '中', low: '低', none: '' };
-const LOAD_MAX = 6; // 負荷バー基準タスク数
+const TIME_LABEL = { morning: '朝', forenoon: '午前中', afternoon: '午後', evening: '夜', none: '' };
+const TIME_EMOJI = { morning: '🌅', forenoon: '☀️', afternoon: '🌤', evening: '🌙', none: '' };
+const TIME_ORDER = { morning: 0, forenoon: 1, afternoon: 2, evening: 3, none: 4 };
+const LOAD_MAX = 6;
 
-let todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-// v3 → v4 マイグレーション（priorityフィールド追加）
-todos = todos.map(t => ({ priority: 'none', ...t }));
+// マイグレーション（旧データ読み込み）
+const raw = JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem('todos_v4') || localStorage.getItem('todos_v3') || '[]');
+let todos = raw.map(t => {
+  // priority(high/mid/low) → timeLabel(none) へ変換
+  const priMap = { high: 'none', mid: 'none', low: 'none' };
+  const timeLabel = t.timeLabel || (priMap[t.priority] !== undefined ? priMap[t.priority] : (t.priority || 'none'));
+  return { ...t, timeLabel, priority: undefined };
+});
 
 let selectedDate = todayStr();
 let activeFilter = 'all';
@@ -333,7 +346,7 @@ function todayStr() {
 }
 function dateToStr(d) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
 function pad(n) { return String(n).padStart(2, '0'); }
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(todos)); }
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(todos.map(t => { const {priority, ...rest} = t; return rest; }))); }
 
 function getWeekStart(offset = 0) {
   const today = new Date(); today.setHours(0,0,0,0);
@@ -513,13 +526,18 @@ function renderMain() {
     switch (activeFilter) {
       case 'active': return list.filter(t => !t.done);
       case 'done':   return list.filter(t => t.done);
-      case 'high': case 'mid': case 'low': return list.filter(t => t.priority === activeFilter);
+      case 'morning': case 'forenoon': case 'afternoon': case 'evening':
+        return list.filter(t => t.timeLabel === activeFilter);
       case 'recruit': case 'inrudder': case 'private': return list.filter(t => t.category === activeFilter);
       default: return list;
     }
   };
 
-  const visible = applyFilter(ownTodos);
+  // 時間帯順ソート（同じ時間帯内はtodosの配列順＝手動ドラッグ順を維持）
+  const timeSorted = [...ownTodos].sort((a, b) =>
+    (TIME_ORDER[a.timeLabel] ?? 4) - (TIME_ORDER[b.timeLabel] ?? 4)
+  );
+  const visible = applyFilter(timeSorted);
   const area = document.getElementById('taskArea');
   area.innerHTML = '';
 
@@ -538,7 +556,7 @@ function renderMain() {
 
 function buildItem(t) {
   const item = document.createElement('div');
-  item.className = `item${t.done ? ' done' : ''} pri-${t.priority || 'none'}`;
+  item.className = `item${t.done ? ' done' : ''} time-${t.timeLabel || 'none'}`;
 
   const chk = document.createElement('input');
   chk.type = 'checkbox'; chk.className = 'chk'; chk.checked = t.done;
@@ -551,12 +569,12 @@ function buildItem(t) {
   catTag.className = `cat-tag ${t.category}`;
   catTag.textContent = CAT[t.category] || t.category;
 
-  // 優先度バッジ
-  if (t.priority && t.priority !== 'none') {
-    const priBadge = document.createElement('span');
-    priBadge.className = `pri-badge ${t.priority}`;
-    priBadge.textContent = PRI_LABEL[t.priority];
-    top.appendChild(priBadge);
+  // 時間帯バッジ
+  if (t.timeLabel && t.timeLabel !== 'none') {
+    const timeBadge = document.createElement('span');
+    timeBadge.className = `time-badge ${t.timeLabel}`;
+    timeBadge.textContent = TIME_EMOJI[t.timeLabel] + ' ' + TIME_LABEL[t.timeLabel];
+    top.appendChild(timeBadge);
   }
 
   const textEl = document.createElement('span');
@@ -696,8 +714,8 @@ function onAdd() {
   const input = document.getElementById('taskInput');
   const text = input.value.trim(); if (!text) { input.focus(); return; }
   const cat = document.getElementById('catSelect').value;
-  const priority = document.getElementById('priSelect').value;
-  todos.push({ id: Date.now(), text, memo: '', done: false, date: selectedDate, category: cat, priority });
+  const timeLabel = document.getElementById('priSelect').value;
+  todos.push({ id: Date.now(), text, memo: '', done: false, date: selectedDate, category: cat, timeLabel });
   input.value = ''; input.focus();
   save(); buildSidebar(); renderMain();
 }
@@ -793,8 +811,8 @@ function renderWeekView() {
       if (e.key === 'Enter' && !e.isComposing) {
         const text = addInp.value.trim(); if (!text) return;
         const cat = document.getElementById('catSelect').value;
-        const priority = document.getElementById('priSelect').value;
-        todos.push({ id: Date.now(), text, memo: '', done: false, date: ds, category: cat, priority });
+        const timeLabel = document.getElementById('priSelect').value;
+        todos.push({ id: Date.now(), text, memo: '', done: false, date: ds, category: cat, timeLabel });
         addInp.value = ''; save(); buildSidebar(); renderWeekView();
       }
       e.stopPropagation();
@@ -808,7 +826,7 @@ function renderWeekView() {
 
 function buildWeekItem(t) {
   const wi = document.createElement('div');
-  wi.className = `week-item pri-${t.priority||'none'}${t.done ? ' done-item' : ''}`;
+  wi.className = `week-item time-${t.timeLabel||'none'}${t.done ? ' done-item' : ''}`;
   wi.dataset.id = String(t.id);
   wi.draggable = true;
 
@@ -819,8 +837,8 @@ function buildWeekItem(t) {
   });
 
   const txt = document.createElement('span'); txt.className = 'week-item-text';
-  const priEmoji = t.priority === 'high' ? '🔴 ' : t.priority === 'mid' ? '🟠 ' : t.priority === 'low' ? '🔵 ' : '';
-  txt.textContent = priEmoji + t.text;
+  const timeEmoji = TIME_EMOJI[t.timeLabel] ? TIME_EMOJI[t.timeLabel] + ' ' : '';
+  txt.textContent = timeEmoji + t.text;
   txt.title = t.text;
 
   wi.append(chk, txt);
@@ -869,7 +887,6 @@ function renderWeekSummary(dates) {
   const done = allTodos.filter(t => t.done).length;
   const total = allTodos.length;
   const pct = Math.round(done / total * 100);
-  const highCount = allTodos.filter(t => t.priority === 'high' && !t.done).length;
   const score = pct >= 80 ? '🏆' : pct >= 60 ? '⭐' : pct >= 40 ? '📈' : '💪';
 
   bar.classList.add('visible');
@@ -879,7 +896,6 @@ function renderWeekSummary(dates) {
     <div class="ws-item"><div class="ws-val" style="color:var(--success)">${done}</div><div class="ws-lbl">完了</div></div>
     <div class="ws-sep"></div>
     <div class="ws-item"><div class="ws-val" style="color:var(--text-muted)">${total-done}</div><div class="ws-lbl">未完了</div></div>
-    ${highCount > 0 ? `<div class="ws-sep"></div><div class="ws-item"><div class="ws-val" style="color:var(--pri-high)">${highCount}</div><div class="ws-lbl">高優先残り</div></div>` : ''}
     <div class="ws-score"><div class="ws-score-val">${score} ${pct}%</div><div class="ws-score-lbl">週間達成率</div></div>
   `;
 }
