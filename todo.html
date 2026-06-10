@@ -152,38 +152,27 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .week-plan-title { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.3px; }
 .week-nav-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); cursor: pointer; font-size: 0.9rem; padding: 4px 10px; transition: all 0.13s; }
 .week-nav-btn:hover { border-color: var(--accent); color: var(--text); }
-.week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; flex: 1; overflow: hidden; }
-.week-col { display: flex; flex-direction: column; overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); min-height: 0; }
-.week-col.today-col { border-color: var(--accent); }
-.week-col.drag-over-col { border-color: var(--accent); border-style: dashed; background: rgba(124,106,247,0.06); }
-.week-col-header { padding: 8px 10px 6px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.week-col-date { font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
-.week-col-weekday { font-size: 0.64rem; color: var(--text-muted); margin-top: 1px; }
-.week-load-bar { height: 2px; margin-top: 5px; border-radius: 1px; background: var(--border); overflow: hidden; }
-.week-load-fill { height: 100%; border-radius: 1px; transition: width 0.3s; }
-.today-col .week-col-date { color: var(--accent); }
-.week-task-count { font-size: 0.6rem; font-weight: 600; padding: 1px 5px; border-radius: 10px; }
-.week-col-body { flex: 1; overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 5px; }
-.week-col-body::-webkit-scrollbar { width: 2px; }
-.week-col-body::-webkit-scrollbar-thumb { background: var(--border); }
-.week-item { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font-size: 0.73rem; cursor: grab; position: relative; overflow: hidden; display: flex; align-items: flex-start; gap: 5px; transition: border-color 0.13s, opacity 0.13s; }
-.week-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; }
-.week-item.time-morning::before   { background: var(--time-morning); }
-.week-item.time-forenoon::before  { background: var(--time-forenoon); }
-.week-item.time-afternoon::before { background: var(--time-afternoon); }
-.week-item.time-evening::before   { background: var(--time-evening); }
-.week-item.time-none::before      { background: transparent; }
-.week-item.done-item { opacity: 0.35; }
-.week-item:hover { border-color: #3a3a50; }
-.week-item.dragging { opacity: 0.25; }
-.week-item-chk { appearance: none; width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--border); flex-shrink: 0; cursor: pointer; outline: none; margin-top: 1px; transition: background 0.13s; }
-.week-item-chk:checked { background: var(--success); border-color: var(--success); }
-.week-item-text { flex: 1; line-height: 1.35; word-break: break-word; }
-.week-item.done-item .week-item-text { text-decoration: line-through; color: var(--text-muted); }
-.week-col-add { padding: 5px 6px; flex-shrink: 0; }
-.week-col-add input { width: 100%; background: none; border: 1px dashed var(--border); border-radius: 6px; color: var(--text); font-size: 0.7rem; outline: none; padding: 4px 8px; transition: border-color 0.13s; }
-.week-col-add input::placeholder { color: #2a2a3a; }
-.week-col-add input:focus { border-color: var(--accent); background: var(--bg); }
+/* 週間カードリスト */
+.week-day-list { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; flex: 1; padding-right: 4px; }
+.week-day-list::-webkit-scrollbar { width: 4px; }
+.week-day-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.week-day-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; transition: border-color 0.13s; }
+.week-day-card.today-card { border-color: var(--accent); }
+.week-day-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.week-day-card-date { font-size: 0.95rem; font-weight: 700; }
+.week-day-card.today-card .week-day-card-date { color: var(--accent); }
+.week-day-today-badge { font-size: 0.56rem; background: var(--accent); color: #fff; padding: 2px 7px; border-radius: 20px; font-weight: 600; }
+.week-day-card-count { margin-left: auto; font-size: 0.74rem; color: var(--text-muted); }
+.week-day-card-progress { height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; margin-bottom: 12px; }
+.week-day-card-progress-fill { height: 100%; border-radius: 1px; background: linear-gradient(90deg, var(--accent), #a78cf7); transition: width 0.4s; }
+.week-day-card-stars { display: flex; gap: 4px; margin-bottom: 10px; }
+.week-diary-star { background: none; border: none; cursor: pointer; font-size: 1.35rem; color: var(--border); transition: color 0.13s, transform 0.1s; padding: 0; line-height: 1; }
+.week-diary-star:hover { color: #f7d95a; transform: scale(1.12); }
+.week-diary-star.active { color: #f7d95a; }
+.week-day-card-memo { width: 100%; background: none; border: none; border-top: 1px solid var(--border); color: var(--text); font-family: inherit; font-size: 0.82rem; line-height: 1.6; outline: none; resize: none; padding: 8px 0 0; margin-top: 2px; height: 52px; transition: color 0.13s; }
+.week-day-card-memo:focus { color: var(--text); }
+.week-day-card-memo::placeholder { color: #2a2a3a; }
+.week-day-card-counter { font-size: 0.64rem; color: var(--text-muted); text-align: right; margin-top: 3px; }
 
 /* 週間サマリーパネル */
 .week-summary-bar { display: none; flex-shrink: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 14px; }
@@ -244,7 +233,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   .item { padding: 10px 11px; }
   .drag-handle { opacity: 0.5 !important; }
   .week-plan-view { padding-bottom: 110px; overflow-y: auto; }
-  .week-grid { grid-template-columns: repeat(2, 1fr); overflow-y: auto; grid-auto-rows: 220px; }
+  .week-day-list { overflow: visible; }
   .week-summary-bar { flex-wrap: wrap; gap: 10px; }
   .carryover-banner { display: none !important; }
 }
@@ -327,7 +316,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
       <button class="week-nav-btn" id="weekToday" style="margin-left:4px; font-size:0.72rem; padding: 4px 10px;">今週</button>
     </div>
     <div class="week-summary-bar" id="weekSummaryBar"></div>
-    <div class="week-grid" id="weekGrid"></div>
+    <div class="week-day-list" id="weekGrid"></div>
   </div>
 
 </main>
@@ -840,122 +829,94 @@ function renderWeekView() {
   // サマリー
   renderWeekSummary(dates);
 
-  const grid = document.getElementById('weekGrid');
-  grid.innerHTML = '';
+  const list = document.getElementById('weekGrid');
+  list.innerHTML = '';
 
   dates.forEach(ds => {
     const d = new Date(ds + 'T00:00:00');
     const isToday = ds === todayS;
     const dayTodos = todos.filter(t => t.date === ds);
     const doneCount = dayTodos.filter(t => t.done).length;
-    const activeCount = dayTodos.filter(t => !t.done).length;
+    const totalCount = dayTodos.length;
+    const diary = getDiary(ds);
 
-    const col = document.createElement('div');
-    col.className = 'week-col' + (isToday ? ' today-col' : '');
-    col.dataset.date = ds;
+    const card = document.createElement('div');
+    card.className = 'week-day-card' + (isToday ? ' today-card' : '');
 
-    // ヘッダー
-    const header = document.createElement('div'); header.className = 'week-col-header';
-    const dateRow = document.createElement('div'); dateRow.className = 'week-col-date';
-    dateRow.innerHTML = `<span>${d.getMonth()+1}/${d.getDate()} <span style="color:var(--text-muted);font-weight:400">${WEEKDAYS[d.getDay()]}</span></span>`;
+    // ── ヘッダー（日付・今日バッジ・完了数） ──
+    const header = document.createElement('div');
+    header.className = 'week-day-card-header';
 
-    if (dayTodos.length > 0) {
-      const cnt = document.createElement('span'); cnt.className = 'week-task-count';
-      cnt.style.background = activeCount > 0 ? 'rgba(124,106,247,0.18)' : 'rgba(90,247,160,0.12)';
-      cnt.style.color = activeCount > 0 ? 'var(--accent)' : 'var(--success)';
-      cnt.textContent = `${doneCount}/${dayTodos.length}`;
-      dateRow.appendChild(cnt);
+    const dateEl = document.createElement('div');
+    dateEl.className = 'week-day-card-date';
+    dateEl.textContent = `${d.getMonth()+1}/${d.getDate()}（${WEEKDAYS[d.getDay()]}）`;
+    header.appendChild(dateEl);
+
+    if (isToday) {
+      const todayBadge = document.createElement('span');
+      todayBadge.className = 'week-day-today-badge';
+      todayBadge.textContent = '今日';
+      header.appendChild(todayBadge);
     }
 
-    const loadWrap = document.createElement('div'); loadWrap.className = 'week-load-bar';
-    const loadFill = document.createElement('div'); loadFill.className = 'week-load-fill';
-    loadFill.style.width = Math.min(dayTodos.length / LOAD_MAX * 100, 100) + '%';
-    loadFill.style.background = loadColor(dayTodos.length);
-    loadWrap.appendChild(loadFill);
+    const countEl = document.createElement('div');
+    countEl.className = 'week-day-card-count';
+    countEl.textContent = totalCount > 0 ? `${doneCount}/${totalCount}件完了` : 'タスクなし';
+    header.appendChild(countEl);
 
-    header.append(dateRow, loadWrap);
+    // ── プログレスバー ──
+    const progWrap = document.createElement('div');
+    progWrap.className = 'week-day-card-progress';
+    const progFill = document.createElement('div');
+    progFill.className = 'week-day-card-progress-fill';
+    progFill.style.width = totalCount > 0 ? Math.round(doneCount / totalCount * 100) + '%' : '0%';
+    progWrap.appendChild(progFill);
 
-    // タスクボディ
-    const body = document.createElement('div'); body.className = 'week-col-body'; body.dataset.date = ds;
-    setupWeekColDrop(body, ds);
+    // ── 星評価（編集可） ──
+    const starsWrap = document.createElement('div');
+    starsWrap.className = 'week-day-card-stars';
+    for (let i = 1; i <= 5; i++) {
+      const star = document.createElement('button');
+      star.type = 'button';
+      star.className = 'week-diary-star' + (i <= diary.stars ? ' active' : '');
+      star.textContent = '★';
+      star.title = `満足度 ${i}`;
+      star.addEventListener('click', e => {
+        e.stopPropagation();
+        const d2 = getDiary(ds);
+        diaries[ds] = { ...d2, stars: d2.stars === i ? 0 : i };
+        saveDiary(); buildSidebar(); renderWeekView();
+      });
+      starsWrap.appendChild(star);
+    }
 
-    dayTodos.forEach(t => {
-      const wi = buildWeekItem(t); body.appendChild(wi);
+    // ── 日記メモ（編集可） ──
+    const memo = document.createElement('textarea');
+    memo.className = 'week-day-card-memo';
+    memo.placeholder = '今日を一言で振り返ってみましょう...';
+    memo.maxLength = 100;
+    memo.value = diary.memo || '';
+    memo.rows = 2;
+
+    const counter = document.createElement('div');
+    counter.className = 'week-day-card-counter';
+    counter.textContent = `残り ${100 - memo.value.length} 文字`;
+
+    memo.addEventListener('click', e => e.stopPropagation());
+    memo.addEventListener('input', () => {
+      counter.textContent = `残り ${100 - memo.value.length} 文字`;
     });
-
-    // インライン追加
-    const addRow = document.createElement('div'); addRow.className = 'week-col-add';
-    const addInp = document.createElement('input');
-    addInp.type = 'text'; addInp.placeholder = '+ 追加'; addInp.maxLength = 200;
-    addInp.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.isComposing) {
-        const text = addInp.value.trim(); if (!text) return;
-        const cat = document.getElementById('catSelect').value;
-        const timeLabel = document.getElementById('priSelect').value;
-        todos.push({ id: Date.now(), text, memo: '', done: false, date: ds, category: cat, timeLabel });
-        addInp.value = ''; save(); buildSidebar(); renderWeekView();
+    memo.addEventListener('blur', () => {
+      const d2 = getDiary(ds);
+      if (memo.value !== (d2.memo || '')) {
+        diaries[ds] = { ...d2, memo: memo.value };
+        saveDiary();
       }
-      e.stopPropagation();
     });
-    addRow.appendChild(addInp);
+    memo.addEventListener('keydown', e => e.stopPropagation());
 
-    col.append(header, body, addRow);
-    grid.appendChild(col);
-  });
-}
-
-function buildWeekItem(t) {
-  const wi = document.createElement('div');
-  wi.className = `week-item time-${t.timeLabel||'none'}${t.done ? ' done-item' : ''}`;
-  wi.dataset.id = String(t.id);
-  wi.draggable = true;
-
-  const chk = document.createElement('input');
-  chk.type = 'checkbox'; chk.className = 'week-item-chk'; chk.checked = t.done;
-  chk.addEventListener('change', () => {
-    t.done = !t.done; save(); buildSidebar(); renderWeekView();
-  });
-
-  const txt = document.createElement('span'); txt.className = 'week-item-text';
-  const timeEmoji = TIME_EMOJI[t.timeLabel] ? TIME_EMOJI[t.timeLabel] + ' ' : '';
-  txt.textContent = timeEmoji + t.text;
-  txt.title = t.text;
-
-  wi.append(chk, txt);
-
-  wi.addEventListener('dragstart', e => {
-    e.dataTransfer.setData('text/plain', String(t.id));
-    e.dataTransfer.effectAllowed = 'move';
-    setTimeout(() => wi.classList.add('dragging'), 0);
-  });
-  wi.addEventListener('dragend', () => wi.classList.remove('dragging'));
-  wi.addEventListener('contextmenu', e => {
-    e.preventDefault();
-    if (confirm(`「${t.text}」を削除しますか？`)) {
-      todos = todos.filter(x => x.id !== t.id);
-      save(); buildSidebar(); renderWeekView();
-    }
-  });
-
-  return wi;
-}
-
-function setupWeekColDrop(body, targetDate) {
-  const col = () => body.closest('.week-col');
-  body.addEventListener('dragover', e => {
-    e.preventDefault(); e.dataTransfer.dropEffect = 'move';
-    col()?.classList.add('drag-over-col');
-  });
-  body.addEventListener('dragleave', e => {
-    if (!body.contains(e.relatedTarget)) col()?.classList.remove('drag-over-col');
-  });
-  body.addEventListener('drop', e => {
-    e.preventDefault(); col()?.classList.remove('drag-over-col');
-    const id = parseInt(e.dataTransfer.getData('text/plain'));
-    const t = todos.find(x => x.id === id);
-    if (t && t.date !== targetDate) {
-      t.date = targetDate; save(); buildSidebar(); renderWeekView();
-    }
+    card.append(header, progWrap, starsWrap, memo, counter);
+    list.appendChild(card);
   });
 }
 
