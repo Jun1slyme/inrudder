@@ -196,6 +196,20 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .ws-score-val { font-size: 1.6rem; font-weight: 700; line-height: 1; }
 .ws-score-lbl { font-size: 0.62rem; color: var(--text-muted); }
 
+/* ── 日記セクション ── */
+.diary-section { margin-top: 18px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+.diary-header { font-size: 0.74rem; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; letter-spacing: 0.04em; }
+.diary-stars { display: flex; gap: 5px; margin-bottom: 10px; }
+.diary-star { background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--border); transition: color 0.13s, transform 0.1s; padding: 0; line-height: 1; }
+.diary-star:hover { color: #f7d95a; transform: scale(1.15); }
+.diary-star.active { color: #f7d95a; }
+.diary-memo { width: 100%; background: none; border: none; border-top: 1px solid var(--border); color: var(--text); font-family: inherit; font-size: 0.82rem; line-height: 1.6; outline: none; resize: none; padding: 8px 0 0; margin-top: 8px; height: 56px; transition: color 0.13s; }
+.diary-memo:focus { color: var(--text); }
+.diary-memo::placeholder { color: var(--text-muted); }
+.diary-counter { font-size: 0.65rem; color: var(--text-muted); text-align: right; margin-top: 3px; }
+.d-stars { font-size: 0.58rem; color: #f7d95a; margin-top: 2px; letter-spacing: 1px; }
+.date-item.active .d-stars { color: rgba(255,255,255,0.75); }
+
 /* canvas */
 #p-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }
 
@@ -225,6 +239,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   .filter-bar { flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
   .filter-bar::-webkit-scrollbar { display: none; }
   .f-btn { flex-shrink: 0; }
+  .day-view { overflow: visible !important; }
   .task-area { flex: none !important; overflow: visible !important; }
   .item { padding: 10px 11px; }
   .drag-handle { opacity: 0.5 !important; }
@@ -340,6 +355,12 @@ let activeFilter = 'all';
 let weekMode = false;
 let weekOffset = 0; // 0=今週, 1=来週, -1=先週
 
+// ── 日記データ ──
+const DIARY_KEY = 'diary_v1';
+let diaries = JSON.parse(localStorage.getItem(DIARY_KEY) || '{}');
+function saveDiary() { localStorage.setItem(DIARY_KEY, JSON.stringify(diaries)); }
+function getDiary(date) { return diaries[date] || { memo: '', stars: 0 }; }
+
 function todayStr() {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
@@ -347,6 +368,58 @@ function todayStr() {
 function dateToStr(d) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
 function pad(n) { return String(n).padStart(2, '0'); }
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(todos.map(t => { const {priority, ...rest} = t; return rest; }))); }
+
+function renderDiarySection(date) {
+  const diary = getDiary(date);
+  const section = document.createElement('div');
+  section.className = 'diary-section';
+
+  const hdr = document.createElement('div');
+  hdr.className = 'diary-header';
+  hdr.textContent = '📔 今日の振り返り';
+
+  const starsWrap = document.createElement('div');
+  starsWrap.className = 'diary-stars';
+  for (let i = 1; i <= 5; i++) {
+    const star = document.createElement('button');
+    star.type = 'button';
+    star.className = 'diary-star' + (i <= diary.stars ? ' active' : '');
+    star.textContent = '★';
+    star.title = `満足度 ${i}`;
+    star.addEventListener('click', () => {
+      const d = getDiary(date);
+      diaries[date] = { ...d, stars: d.stars === i ? 0 : i };
+      saveDiary(); buildSidebar(); renderMain();
+    });
+    starsWrap.appendChild(star);
+  }
+
+  const memo = document.createElement('textarea');
+  memo.className = 'diary-memo';
+  memo.placeholder = '今日を一言で振り返ってみましょう...';
+  memo.maxLength = 100;
+  memo.value = diary.memo || '';
+  memo.rows = 2;
+
+  const counter = document.createElement('div');
+  counter.className = 'diary-counter';
+  counter.textContent = `残り ${100 - memo.value.length} 文字`;
+
+  memo.addEventListener('input', () => {
+    counter.textContent = `残り ${100 - memo.value.length} 文字`;
+  });
+  memo.addEventListener('blur', () => {
+    const d = getDiary(date);
+    if (memo.value !== (d.memo || '')) {
+      diaries[date] = { ...d, memo: memo.value };
+      saveDiary();
+    }
+  });
+  memo.addEventListener('keydown', e => e.stopPropagation());
+
+  section.append(hdr, starsWrap, memo, counter);
+  return section;
+}
 
 function getWeekStart(offset = 0) {
   const today = new Date(); today.setHours(0,0,0,0);
@@ -426,7 +499,12 @@ function buildSidebar(scrollToSelected = false) {
     loadFill.style.background = loadColor(totalCount);
     loadWrap.appendChild(loadFill);
 
-    el.append(labelDiv, weekDiv, countDiv, loadWrap);
+    const diary = getDiary(ds);
+    const starsDiv = document.createElement('div');
+    starsDiv.className = 'd-stars';
+    if (diary.stars > 0) starsDiv.textContent = '★'.repeat(diary.stars);
+
+    el.append(labelDiv, weekDiv, countDiv, starsDiv, loadWrap);
 
     if (activeCount > 0) {
       const badge = document.createElement('div');
@@ -542,16 +620,18 @@ function renderMain() {
   area.innerHTML = '';
 
   if (!visible.length) {
-    area.innerHTML = `<div class="empty-msg">${
-      activeFilter === 'done' ? '完了済みのタスクはありません' :
-      activeFilter === 'active' ? 'すべて完了しました！' : 'タスクを追加してみましょう'
-    }</div>`;
-    return;
+    const emptyDiv = document.createElement('div');
+    emptyDiv.className = 'empty-msg';
+    emptyDiv.textContent = activeFilter === 'done' ? '完了済みのタスクはありません' :
+      activeFilter === 'active' ? 'すべて完了しました！' : 'タスクを追加してみましょう';
+    area.appendChild(emptyDiv);
+  } else {
+    const ul = document.createElement('div'); ul.className = 'task-list';
+    visible.forEach(t => ul.appendChild(buildItem(t)));
+    area.appendChild(ul);
   }
 
-  const ul = document.createElement('div'); ul.className = 'task-list';
-  visible.forEach(t => ul.appendChild(buildItem(t)));
-  area.appendChild(ul);
+  area.appendChild(renderDiarySection(selectedDate));
 }
 
 function buildItem(t) {
