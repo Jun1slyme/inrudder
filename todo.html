@@ -815,6 +815,7 @@ function toggleWeekMode(force) {
   document.getElementById('weekView').classList.toggle('visible', weekMode);
   document.getElementById('btnWeekPlan').classList.toggle('active', weekMode);
   if (weekMode) renderWeekView();
+  else renderMain();
 }
 
 function renderWeekView() {
